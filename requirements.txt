@@ -1,0 +1,18 @@
+# Reddit Sentiment Analysis Project
+
+# Reddit API
+praw
+
+# Data Processing
+pandas
+textblob
+datetime
+
+# Visualization
+plotly
+streamlit
+
+# Optional but useful (recommended)
+python-dotenv   # for hiding Reddit API credentials in .env file
+requests         # in case of additional API calls or error handling
+beautifulsoup4   # optional, if you scrape or clean HTML content
