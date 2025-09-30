@@ -6,9 +6,8 @@ from datetime import datetime
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import nltk
 nltk.download('vader_lexicon')
-from dotenv import load_dotenv
 import os
-import praw
+import streamlit as st
 
 # Initialize sentiment analyzer once
 analyzer = SentimentIntensityAnalyzer()
@@ -66,11 +65,10 @@ def fetch_reddit(query):
     """Fetch Reddit posts using PRAW."""
     print(f"\nFetching Reddit data for: {query}")
 
-    load_dotenv()
     reddit = praw.Reddit(
-    client_id=os.getenv("REDDIT_CLIENT_ID"),
-    client_secret=os.getenv("REDDIT_CLIENT_SECRET"),
-    user_agent=os.getenv("REDDIT_USER_AGENT")
+    client_id=st.secrets["REDDIT_CLIENT_ID"],
+    client_secret=st.secrets["REDDIT_CLIENT_SECRET"],
+    user_agent=st.secrets["REDDIT_USER_AGENT"]
     )
 
     posts = []
@@ -119,4 +117,5 @@ if __name__ == "__main__":
         print(df.head(5))
         df.to_csv(f"{query.lower()}_combined.csv", index=False)
         print(f"\n✅ Saved as {query.lower()}_combined.csv")
+
 
