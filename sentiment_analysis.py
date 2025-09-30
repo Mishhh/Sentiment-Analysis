@@ -4,6 +4,8 @@ from lxml import etree
 import praw
 from datetime import datetime
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+import nltk
+nltk.download('vader_lexicon')
 from dotenv import load_dotenv
 import os
 import praw
@@ -117,3 +119,4 @@ if __name__ == "__main__":
         print(df.head(5))
         df.to_csv(f"{query.lower()}_combined.csv", index=False)
         print(f"\n✅ Saved as {query.lower()}_combined.csv")
+
