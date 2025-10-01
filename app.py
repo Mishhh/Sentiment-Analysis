@@ -127,6 +127,9 @@ if st.sidebar.button("Analyze Sentiment"):
                 },
                 title=f"Monthly Sentiment Trend for {query.title()}",
             )
+            st.markdown(
+                "💡 Tip: Adjust the time range to explore trends in more detail. Use the time range selector to zoom in on specific periods of the graph."
+                )
 
             fig2.update_layout(
                 plot_bgcolor="rgba(0,0,0,0)",
@@ -210,6 +213,7 @@ if st.sidebar.button("Analyze Sentiment"):
 
 else:
     st.info("👈 Enter a keyword in the sidebar and click **Analyze Sentiment** to start.")
+
 
 
 
