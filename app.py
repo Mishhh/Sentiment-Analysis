@@ -4,7 +4,7 @@ import plotly.express as px
 from sentiment_analysis import get_combined_data
 
 # ------------------------#
-# 🌟 Page Configuration
+# Page Configuration
 # ------------------------#
 st.set_page_config(
     page_title="Sentiment Analysis Dashboard",
@@ -13,7 +13,7 @@ st.set_page_config(
 )
 
 # ------------------------#
-# 🧭 Header
+# Header
 # ------------------------#
 st.title("📊 Sentiment Analysis Dashboard")
 st.markdown(
@@ -25,7 +25,7 @@ st.markdown(
 st.markdown("---")
 
 # ------------------------#
-# 🎯 Sidebar Controls
+# Sidebar Controls
 # ------------------------#
 st.sidebar.header("🔍 Search Settings")
 query = st.sidebar.text_input(
@@ -38,7 +38,7 @@ st.sidebar.info(
 )
 
 # ------------------------#
-# 🚀 Run Analysis
+# Run Analysis
 # ------------------------#
 if st.sidebar.button("Analyze Sentiment"):
     if not query:
@@ -53,7 +53,7 @@ if st.sidebar.button("Analyze Sentiment"):
             st.success(f"✅ Analysis completed for **{query.title()}**!")
 
             # ------------------------#
-            # 🧹 Clean & Prepare Data
+            # Clean & Prepare Data
             # ------------------------#
             df["Published Date"] = pd.to_datetime(df.get("Published Date"), errors='coerce')
             df["Posted Date"] = pd.to_datetime(df.get("Posted Date"), errors='coerce')
@@ -62,7 +62,7 @@ if st.sidebar.button("Analyze Sentiment"):
             df["Month"] = df["Date"].dt.to_period("M").astype(str)
 
             # ------------------------#
-            # 📈 Key Metrics
+            # Key Metrics
             # ------------------------#
             sentiment_counts = df["Sentiment"].value_counts()
             total_records = len(df)
@@ -77,7 +77,7 @@ if st.sidebar.button("Analyze Sentiment"):
             st.markdown("---")
 
             # ------------------------#
-            # 1️⃣ Sentiment Distribution
+            #  Sentiment Distribution
             # ------------------------#
             st.subheader("💬 Sentiment Distribution")
 
@@ -109,7 +109,7 @@ if st.sidebar.button("Analyze Sentiment"):
             st.plotly_chart(fig1, use_container_width=True)
 
             # ------------------------#
-            # 2️⃣ Sentiment Trend Over Time
+            # Sentiment Trend Over Time
             # ------------------------#
             st.subheader("📅 Sentiment Trend Over Time")
 
@@ -140,7 +140,7 @@ if st.sidebar.button("Analyze Sentiment"):
             st.plotly_chart(fig2, use_container_width=True)
 
             # ------------------------#
-            # 3️⃣ Platform-wise Comparison
+            #  Platform-wise Comparison
             # ------------------------#
             st.subheader("🌐 Platform-wise Sentiment Comparison")
 
@@ -189,7 +189,7 @@ if st.sidebar.button("Analyze Sentiment"):
                 st.plotly_chart(fig_n, use_container_width=True)
 
             # ------------------------#
-            # 📋 Detailed Data Table
+            #  Detailed Data Table
             # ------------------------#
             st.subheader("📋 Detailed Mentions")
 
@@ -201,7 +201,7 @@ if st.sidebar.button("Analyze Sentiment"):
             )
 
             # ------------------------#
-            # 🧾 Footer
+            #  Footer
             # ------------------------#
             st.markdown("---")
             st.caption(
@@ -210,3 +210,4 @@ if st.sidebar.button("Analyze Sentiment"):
 
 else:
     st.info("👈 Enter a keyword in the sidebar and click **Analyze Sentiment** to start.")
+
