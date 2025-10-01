@@ -1,4 +1,4 @@
-# 🧠 Reddit & News Sentiment Analysis Dashboard
+# Sentiment Analysis Dashboard
 
 Analyze public sentiment around any topic using **Reddit posts** and **Google News articles** — all in one interactive dashboard powered by **Streamlit**, **VADER Sentiment Analysis**, and **PRAW**.
 
