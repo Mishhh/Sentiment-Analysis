@@ -15,7 +15,7 @@ st.set_page_config(
 # ------------------------#
 # Header
 # ------------------------#
-st.title("📊 Sentiment Analysis Dashboard")
+st.title("🤔 Sentiment Analysis Dashboard")
 st.markdown(
     """
     Gain insights into public sentiment from **Reddit** and **Google News** — all in one place.  
@@ -72,7 +72,7 @@ if st.sidebar.button("Analyze Sentiment"):
             col1.metric("📰 Total Mentions", total_records)
             col2.metric("😊 Positive", sentiment_counts.get("Positive", 0))
             col3.metric("😐 Neutral", sentiment_counts.get("Neutral", 0))
-            col4.metric("😡 Negative", sentiment_counts.get("Negative", 0))
+            col4.metric("🙁 Negative", sentiment_counts.get("Negative", 0))
 
             st.markdown("---")
 
@@ -210,5 +210,6 @@ if st.sidebar.button("Analyze Sentiment"):
 
 else:
     st.info("👈 Enter a keyword in the sidebar and click **Analyze Sentiment** to start.")
+
 
 
