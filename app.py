@@ -194,7 +194,7 @@ if st.sidebar.button("Analyze Sentiment"):
             st.subheader("📋 Detailed Mentions")
 
             st.dataframe(
-                df[["Platform", "Title", "Sentiment", "Compound", "Link", "Date"]],
+                df[["Platform", "Title", "Sentiment", "Sentiment Percent", "Link", "Date"]],
                 use_container_width=True,
                 height=400,
                 hide_index=True,
@@ -210,4 +210,5 @@ if st.sidebar.button("Analyze Sentiment"):
 
 else:
     st.info("👈 Enter a keyword in the sidebar and click **Analyze Sentiment** to start.")
+
 
