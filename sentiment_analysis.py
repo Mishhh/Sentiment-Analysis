@@ -52,7 +52,7 @@ def fetch_news(query):
             "Published Date": date,
             "Link": link,
             "Sentiment": sentiment,
-            "Compound": abs(round(score*100,2)),
+            "Sentiment Percent": abs(round(score*100,2)),
             "Keyword": query
         })
 
@@ -88,7 +88,7 @@ def fetch_reddit(query):
                 "Posted Date": datetime.utcfromtimestamp(post.created_utc),
                 "Link": post.url,
                 "Sentiment": sentiment,
-                "Compound": abs(round(score*100,2)),
+                "Sentiment Percent": abs(round(score*100,2)),
                 "Keyword": query
             })
 
@@ -113,5 +113,6 @@ def get_combined_data(query):
 if __name__ == "__main__":
     query = None
     df = get_combined_data(query)
+
 
 
