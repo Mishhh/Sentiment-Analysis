@@ -6,8 +6,9 @@ from datetime import datetime
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import nltk
 nltk.download('vader_lexicon')
+from dotenv import load_dotenv
 import os
-import streamlit as st
+import praw
 
 # Initialize sentiment analyzer once
 analyzer = SentimentIntensityAnalyzer()
@@ -51,12 +52,12 @@ def fetch_news(query):
             "Published Date": date,
             "Link": link,
             "Sentiment": sentiment,
-            "Compound": score,
+            "Compound": abs(round(score*100,2)),
             "Keyword": query
         })
 
     df = pd.DataFrame(data)
-    print(f"✅ {len(df)} news articles found.")
+    print(f" {len(df)} news articles found.")
     return df
 
 
@@ -65,10 +66,11 @@ def fetch_reddit(query):
     """Fetch Reddit posts using PRAW."""
     print(f"\nFetching Reddit data for: {query}")
 
+    load_dotenv()
     reddit = praw.Reddit(
-    client_id=st.secrets["REDDIT_CLIENT_ID"],
-    client_secret=st.secrets["REDDIT_CLIENT_SECRET"],
-    user_agent=st.secrets["REDDIT_USER_AGENT"]
+    client_id=os.getenv("REDDIT_CLIENT_ID"),
+    client_secret=os.getenv("REDDIT_CLIENT_SECRET"),
+    user_agent=os.getenv("REDDIT_USER_AGENT")
     )
 
     posts = []
@@ -86,12 +88,12 @@ def fetch_reddit(query):
                 "Posted Date": datetime.utcfromtimestamp(post.created_utc),
                 "Link": post.url,
                 "Sentiment": sentiment,
-                "Compound": score,
+                "Compound": abs(round(score*100,2)),
                 "Keyword": query
             })
 
     df = pd.DataFrame(posts)
-    print(f"✅ {len(df)} Reddit posts found.")
+    print(f" {len(df)} Reddit posts found.")
     return df
 
 
@@ -102,7 +104,7 @@ def get_combined_data(query):
     reddit_df = fetch_reddit(query)
 
     combined_df = pd.concat([news_df, reddit_df], ignore_index=True)
-    print(f"\n📊 Total records combined: {len(combined_df)}")
+    print(f"\n Total records combined: {len(combined_df)}")
 
     return combined_df
 
@@ -111,11 +113,5 @@ def get_combined_data(query):
 if __name__ == "__main__":
     query = None
     df = get_combined_data(query)
-
-    if not df.empty:
-        print("\nSample data:")
-        print(df.head(5))
-        df.to_csv(f"{query.lower()}_combined.csv", index=False)
-        print(f"\n✅ Saved as {query.lower()}_combined.csv")
 
 
