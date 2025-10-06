@@ -24,7 +24,9 @@ def analyze_sentiment(text):
         sentiment = "Negative"
     else:
         sentiment = "Neutral"
-    return sentiment, round(score, 3)
+
+    score = abs(round(score*100,2))
+    return sentiment, score
 
 
 # -------------------- NEWS SCRAPER --------------------
@@ -52,7 +54,7 @@ def fetch_news(query):
             "Published Date": date,
             "Link": link,
             "Sentiment": sentiment,
-            "Sentiment Percent": abs(round(score*100,2)),
+            "Sentiment Percent": score ,
             "Keyword": query
         })
 
@@ -88,7 +90,7 @@ def fetch_reddit(query):
                 "Posted Date": datetime.utcfromtimestamp(post.created_utc),
                 "Link": post.url,
                 "Sentiment": sentiment,
-                "Sentiment Percent": abs(round(score*100,2)),
+                "Sentiment Percent": score ,
                 "Keyword": query
             })
 
@@ -113,6 +115,7 @@ def get_combined_data(query):
 if __name__ == "__main__":
     query = None
     df = get_combined_data(query)
+
 
 
 
