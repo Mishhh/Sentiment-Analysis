@@ -201,6 +201,11 @@ if st.sidebar.button("Analyze Sentiment"):
                 use_container_width=True,
                 height=400,
                 hide_index=True,
+                column_config={
+                "Link": st.column_config.LinkColumn(
+                    "Link",
+                    help="Click to open the source")
+                }
             )
 
             # ------------------------#
@@ -213,6 +218,7 @@ if st.sidebar.button("Analyze Sentiment"):
 
 else:
     st.info("👈 Enter a keyword in the sidebar and click **Analyze Sentiment** to start.")
+
 
 
 
