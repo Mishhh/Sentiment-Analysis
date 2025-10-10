@@ -249,7 +249,4 @@ else:
     st.info("👈 Enter a topic of interest in the sidebar and click **Analyze Sentiment** to start.")
 
 
-else:
-    st.info("👈 Enter a keyword in the sidebar and click **Analyze Sentiment** to start.")
-
 
