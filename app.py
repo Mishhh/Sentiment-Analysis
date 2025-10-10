@@ -1,25 +1,25 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from sentiment_analysis import get_combined_data
+from sentiment_analysis_copy import get_combined_data
 
 # ------------------------#
 # Page Configuration
 # ------------------------#
 st.set_page_config(
     page_title="Sentiment Analysis Dashboard",
-    layout="wide",
+    layout="wide",  
     page_icon="📊",
 )
 
 # ------------------------#
 # Header
 # ------------------------#
-st.title("🤔 Sentiment Analysis Dashboard")
+st.title("📊 Sentiment Analysis Dashboard")
 st.markdown(
     """
     Gain insights into public sentiment from **Reddit** and **Google News** — all in one place.  
-    Enter a keyword to uncover opinions, discussions, and media coverage about your topic of interest.
+    Select a category to uncover opinions, discussions, and media coverage about your topic of interest.
     """
 )
 st.markdown("---")
@@ -28,13 +28,15 @@ st.markdown("---")
 # Sidebar Controls
 # ------------------------#
 st.sidebar.header("🔍 Search Settings")
+
+category = st.sidebar.selectbox("Select a category:", ["Person", "Brand", "Topic"])
+
 query = st.sidebar.text_input(
-    "Enter a topic or brand name", 
-    placeholder="e.g., Zomato / Tesla / Climate Change"
+    f"Enter the {category} name:", 
 )
 st.sidebar.markdown("---")
 st.sidebar.info(
-    "💡 Tip: Broader keywords fetch more results. For example, use *Electric Cars* instead of *Tesla Model 3*."
+    "💡 Tip: Choose the right **Category** for more accurate and relevant results. "
 )
 
 # ------------------------#
@@ -42,7 +44,7 @@ st.sidebar.info(
 # ------------------------#
 if st.sidebar.button("Analyze Sentiment"):
     if not query:
-        st.warning("⚠️ Please enter a topic or keyword before analyzing.")
+        st.warning("⚠️ Please enter a topic before analyzing.")
     else:
         with st.spinner("🔎 Collecting and analyzing data... Please wait ⏳"):
             df = get_combined_data(query)
@@ -53,7 +55,7 @@ if st.sidebar.button("Analyze Sentiment"):
             st.success(f"✅ Analysis completed for **{query.title()}**!")
 
             # ------------------------#
-            # Clean & Prepare Data
+            # 🧹 Clean & Prepare Data
             # ------------------------#
             df["Published Date"] = pd.to_datetime(df.get("Published Date"), errors='coerce')
             df["Posted Date"] = pd.to_datetime(df.get("Posted Date"), errors='coerce')
@@ -61,8 +63,9 @@ if st.sidebar.button("Analyze Sentiment"):
             df.dropna(subset=["Date"], inplace=True)
             df["Month"] = df["Date"].dt.to_period("M").astype(str)
 
+
             # ------------------------#
-            # Key Metrics
+            # 📈 Key Metrics
             # ------------------------#
             sentiment_counts = df["Sentiment"].value_counts()
             total_records = len(df)
@@ -72,7 +75,7 @@ if st.sidebar.button("Analyze Sentiment"):
             col1.metric("📰 Total Mentions", total_records)
             col2.metric("😊 Positive", sentiment_counts.get("Positive", 0))
             col3.metric("😐 Neutral", sentiment_counts.get("Neutral", 0))
-            col4.metric("🙁 Negative", sentiment_counts.get("Negative", 0))
+            col4.metric("😡 Negative", sentiment_counts.get("Negative", 0))
 
             st.markdown("---")
 
@@ -125,7 +128,7 @@ if st.sidebar.button("Analyze Sentiment"):
                     "Neutral": "#95a5a6",
                     "Negative": "#e74c3c",
                 },
-                title=f"Monthly Sentiment Trend for {query.title()}",
+                title=f"Overall Sentiment Trend for {query.title()}",
             )
             st.markdown(
                 "💡 Tip: Adjust the time range to explore trends in more detail. Use the time range selector to zoom in on specific periods of the graph."
@@ -142,8 +145,8 @@ if st.sidebar.button("Analyze Sentiment"):
             )
             st.plotly_chart(fig2, use_container_width=True)
 
-            # ------------------------#
-            #  Platform-wise Comparison
+           # ------------------------#
+            # 3️⃣ Platform-wise Comparison
             # ------------------------#
             st.subheader("🌐 Platform-wise Sentiment Comparison")
 
@@ -153,51 +156,57 @@ if st.sidebar.button("Analyze Sentiment"):
 
             # Reddit Chart
             with col1:
-                reddit_sentiment = reddit_df["Sentiment"].value_counts().reset_index()
-                reddit_sentiment.columns = ["Sentiment", "Count"]
-                fig_r = px.pie(
-                    reddit_sentiment,
-                    names="Sentiment",
-                    values="Count",
-                    hole=0.5,
-                    color="Sentiment",
-                    color_discrete_map={
-                        "Positive": "#2ecc71",
-                        "Neutral": "#95a5a6",
-                        "Negative": "#e74c3c",
-                    },
-                    title="Reddit Sentiment",
-                )
-                fig_r.update_traces(textinfo="percent+label", pull=[0.05]*len(reddit_sentiment))
-                st.plotly_chart(fig_r, use_container_width=True)
+                if reddit_df.empty:
+                    st.warning("Reddit’s quiet on this one. Try a different topic or check back later!", icon="🔍")
+                else :
+                    reddit_sentiment = reddit_df["Sentiment"].value_counts().reset_index()
+                    reddit_sentiment.columns = ["Sentiment", "Count"]
+                    fig_r = px.pie(
+                        reddit_sentiment,
+                        names="Sentiment",
+                        values="Count",
+                        hole=0.5,
+                        color="Sentiment",
+                        color_discrete_map={
+                            "Positive": "#2ecc71",
+                            "Neutral": "#95a5a6",
+                            "Negative": "#e74c3c",
+                        },
+                        title="Reddit Sentiment",
+                    )
+                    fig_r.update_traces(textinfo="percent+label", pull=[0.05]*len(reddit_sentiment))
+                    st.plotly_chart(fig_r, use_container_width=True)
 
             # News Chart
             with col2:
-                news_sentiment = news_df["Sentiment"].value_counts().reset_index()
-                news_sentiment.columns = ["Sentiment", "Count"]
-                fig_n = px.pie(
-                    news_sentiment,
-                    names="Sentiment",
-                    values="Count",
-                    hole=0.5,
-                    color="Sentiment",
-                    color_discrete_map={
-                        "Positive": "#2ecc71",
-                        "Neutral": "#95a5a6",
-                        "Negative": "#e74c3c",
-                    },
-                    title="News Sentiment",
-                )
-                fig_n.update_traces(textinfo="percent+label", pull=[0.05]*len(news_sentiment))
-                st.plotly_chart(fig_n, use_container_width=True)
+                if news_df.empty:
+                    st.warning("No recent news chatter on this topic. You might get more insights by widening your search or checking back soon.", icon="📰")
+                else :
+                    news_sentiment = news_df["Sentiment"].value_counts().reset_index()
+                    news_sentiment.columns = ["Sentiment", "Count"]
+                    fig_n = px.pie(
+                        news_sentiment,
+                        names="Sentiment",
+                        values="Count",
+                        hole=0.5,
+                        color="Sentiment",
+                        color_discrete_map={
+                            "Positive": "#2ecc71",
+                            "Neutral": "#95a5a6",
+                            "Negative": "#e74c3c",
+                        },
+                        title="News Sentiment",
+                    )
+                    fig_n.update_traces(textinfo="percent+label", pull=[0.05]*len(news_sentiment))
+                    st.plotly_chart(fig_n, use_container_width=True)
 
             # ------------------------#
             #  Detailed Data Table
             # ------------------------#
             st.subheader("📋 Detailed Mentions")
 
-            st.dataframe(
-                df[["Platform", "Title", "Sentiment", "Sentiment Percent", "Link", "Date"]],
+            st.data_editor(
+                df[["Platform", "Query", "Title", "Sentiment", "Sentiment Percent", "Link", "Date"]],
                 use_container_width=True,
                 height=400,
                 hide_index=True,
@@ -218,8 +227,3 @@ if st.sidebar.button("Analyze Sentiment"):
 
 else:
     st.info("👈 Enter a keyword in the sidebar and click **Analyze Sentiment** to start.")
-
-
-
-
-
