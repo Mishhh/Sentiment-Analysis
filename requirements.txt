@@ -6,3 +6,4 @@ praw
 lxml
 nltk
 python-dotenv
+feedparser
