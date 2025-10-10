@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-from sentiment_analysis_copy import get_combined_data
+from sentiment_analysis import get_combined_data
 
 # ------------------------#
 # Page Configuration
@@ -227,3 +227,4 @@ if st.sidebar.button("Analyze Sentiment"):
 
 else:
     st.info("👈 Enter a keyword in the sidebar and click **Analyze Sentiment** to start.")
+
