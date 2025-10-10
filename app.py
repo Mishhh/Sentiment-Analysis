@@ -15,7 +15,7 @@ st.set_page_config(
 # ------------------------#
 # Header
 # ------------------------#
-st.title("📊 Sentiment Analysis Dashboard")
+st.title("🤔 Sentiment Analysis Dashboard")
 st.markdown(
     """
     Gain insights into public sentiment from **Reddit** and **Google News** — all in one place.  
@@ -30,19 +30,39 @@ st.markdown("---")
 st.sidebar.header("🔍 Search Settings")
 
 category = st.sidebar.selectbox("Select a category:", ["Person", "Brand", "Topic"])
+placeholder_map = {
+    "Person": "e.g., Elon Musk, Taylor Swift",
+    "Brand": "e.g., Tesla, Apple, Nike",
+    "Topic": "e.g., Climate Change, AI Safety, Electric Cars"
+}
 
 query = st.sidebar.text_input(
-    f"Enter the {category} name:", 
+    f"Enter {category} name:",
+    placeholder=placeholder_map.get(category, "Type your keyword here...")
 )
+
 st.sidebar.markdown("---")
 st.sidebar.info(
     "💡 Tip: Choose the right **Category** for more accurate and relevant results. "
 )
 
+analyze_clicked = st.sidebar.button("Analyze Sentiment")
+
 # ------------------------#
 # Run Analysis
 # ------------------------#
-if st.sidebar.button("Analyze Sentiment"):
+if analyze_clicked:
+    # Collapse sidebar using JavaScript
+    st.markdown(
+        """
+        <script>
+        const sidebar = parent.document.querySelector('[data-testid="stSidebar"]');
+        if (sidebar) sidebar.style.display = 'none';
+        </script>
+        """,
+        unsafe_allow_html=True
+    )
+        
     if not query:
         st.warning("⚠️ Please enter a topic before analyzing.")
     else:
@@ -55,7 +75,7 @@ if st.sidebar.button("Analyze Sentiment"):
             st.success(f"✅ Analysis completed for **{query.title()}**!")
 
             # ------------------------#
-            # 🧹 Clean & Prepare Data
+            # Clean & Prepare Data
             # ------------------------#
             df["Published Date"] = pd.to_datetime(df.get("Published Date"), errors='coerce')
             df["Posted Date"] = pd.to_datetime(df.get("Posted Date"), errors='coerce')
@@ -65,7 +85,7 @@ if st.sidebar.button("Analyze Sentiment"):
 
 
             # ------------------------#
-            # 📈 Key Metrics
+            # Key Metrics
             # ------------------------#
             sentiment_counts = df["Sentiment"].value_counts()
             total_records = len(df)
@@ -146,7 +166,7 @@ if st.sidebar.button("Analyze Sentiment"):
             st.plotly_chart(fig2, use_container_width=True)
 
            # ------------------------#
-            # 3️⃣ Platform-wise Comparison
+            #  Platform-wise Comparison
             # ------------------------#
             st.subheader("🌐 Platform-wise Sentiment Comparison")
 
@@ -206,7 +226,7 @@ if st.sidebar.button("Analyze Sentiment"):
             st.subheader("📋 Detailed Mentions")
 
             st.data_editor(
-                df[["Platform", "Query", "Title", "Sentiment", "Sentiment Percent", "Link", "Date"]],
+                df[["Platform", "Title", "Sentiment", "Sentiment Percent","Date", "Link" ]],
                 use_container_width=True,
                 height=400,
                 hide_index=True,
@@ -226,5 +246,10 @@ if st.sidebar.button("Analyze Sentiment"):
             )
 
 else:
+    st.info("👈 Enter a topic of interest in the sidebar and click **Analyze Sentiment** to start.")
+
+
+else:
     st.info("👈 Enter a keyword in the sidebar and click **Analyze Sentiment** to start.")
+
 
