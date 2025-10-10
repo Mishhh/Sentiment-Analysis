@@ -5,6 +5,7 @@ import feedparser
 from datetime import datetime
 from requests.utils import quote
 from dotenv import load_dotenv
+nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 # ------------------------
@@ -151,3 +152,4 @@ def get_combined_data(query, entity_type="topic"):
     reddit_df = search_reddit(queries["reddit"], query)
     combined_df = pd.concat([news_df, reddit_df], ignore_index=True)
     return combined_df
+
